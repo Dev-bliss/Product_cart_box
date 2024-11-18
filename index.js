@@ -123,6 +123,8 @@ dataBox.forEach((item, index) => {
       totalCartCost += unitCost;
       countElem.textContent = `(${cartCount})`;
 
+      // document.querySelector(".orders").textContent = `$${totalCartCost.toFixed(2)}`;
+
       // Create and append a new cart item display
       let newDiv = document.createElement("li");
       newDiv.innerHTML = `
@@ -135,11 +137,43 @@ dataBox.forEach((item, index) => {
                 <p class="total"> <span class="totalPrice">$${unitCost.toFixed(
                   2
                 )}</span></p>
+                <button class="delete-btn">x</button>
                 </div>
                 <hr>`;
       cartDisplay.appendChild(newDiv);
+
+      
       // orderMessage.appendChild(newDiv)
       // Check if totalP div already exists
+
+      const deleteBtn = newDiv.querySelector(".delete-btn");
+      deleteBtn.addEventListener("click", () => {
+        // Check if the item exists in cartItems before deleting
+        if (cartItems[divElem.id]) {
+          // Reduce totalCartCost by the cost of the item to be removed
+          totalCartCost -= cartItems[divElem.id].unit * divElem.price;
+          
+          // Remove item from cartItems object
+          delete cartItems[divElem.id];
+          
+          // Update cart count and display it
+          cartCount--;
+          countElem.textContent = `(${cartCount})`;
+          
+          // Remove item from the display
+          cartDisplay.removeChild(newDiv);
+          
+          // If no items remain, reset the totalCartCost to 0
+          if (cartCount === 0) {
+            totalCartCost = 0;
+          }
+          
+          // Update the displayed total cost
+          document.querySelector(".orders").textContent = `$${totalCartCost.toFixed(2)}`;
+        }
+      });
+      
+
       if (!document.querySelector(".totalOrderContainer")) {
         let totalP = document.createElement("div");
         totalP.classList.add("totalOrderContainer"); // Adding a class to identify it
@@ -156,6 +190,7 @@ dataBox.forEach((item, index) => {
         orderMessage.appendChild(totalP);
         orderMessage.appendChild(hTag);
       }
+      document.querySelector(".orders").textContent = `$${totalCartCost.toFixed(2)}`;
 
       // Select quantity and total price elements
       const quantityElem = newDiv.querySelector(".quantity");
@@ -196,6 +231,45 @@ dataBox.forEach((item, index) => {
     }
   });
 }); // Function to show the modal with order details
+// Ensure the confirm order button is set up once
+function handleOrderConfirmation() {
+  const confirmButton = orderMessage.querySelector("h3");
+
+  if (confirmButton && !confirmButton.hasListener) {
+    confirmButton.addEventListener("click", () => {
+      if (confirmButton.textContent === "confirm order") {
+        showOrderModal(); // Show modal with order details
+        confirmButton.textContent = "Start New Order";
+      } else {
+        resetCart(); // Reset cart if button says "Start New Order"
+      }
+    });
+    confirmButton.hasListener = true; // Mark to avoid duplicate listeners
+  }
+}
+
+// Modified part for cart item addition
+if (!document.querySelector(".totalOrderContainer")) {
+  let totalP = document.createElement("div");
+  totalP.classList.add("totalOrderContainer");
+  let ptag = document.createElement("p");
+  ptag.innerHTML = "Total order";
+
+  let spanTag = document.createElement("span");
+  spanTag.innerHTML = 0;
+  spanTag.className = "orders";
+  ptag.appendChild(spanTag);
+  totalP.appendChild(ptag);
+
+  let hTag = document.createElement("h3");
+  hTag.innerHTML = "confirm order";
+  orderMessage.appendChild(totalP);
+  orderMessage.appendChild(hTag);
+
+  handleOrderConfirmation(); // Set up the order confirmation listener
+}
+
+// Show order modal with details
 function showOrderModal() {
   const modal = document.getElementById("orderModal");
   const orderDetails = document.getElementById("orderDetails");
@@ -228,7 +302,7 @@ function showOrderModal() {
   };
 }
 
-// Function to reset the cart
+// Reset cart function
 function resetCart() {
   cartItems = {};
   cartCount = 0;
@@ -242,28 +316,7 @@ function resetCart() {
   if (confirmOrderBtn) confirmOrderBtn.textContent = "confirm order";
 }
 
-// Modify the "confirm order" button functionality
-function handleOrderConfirmation() {
-  const confirmButton = orderMessage.querySelector("h3");
-
-  if (confirmButton) {
-    confirmButton.addEventListener("click", () => {
-      if (confirmButton.textContent === "confirm order") {
-        showOrderModal(); // Show modal with order details
-        confirmButton.textContent = "Start New Order";
-      } else {
-        resetCart(); // Reset cart if button says "Start New Order"
-      }
-    });
-  }
-}
-
-// Ensure handleOrderConfirmation is called once the "confirm order" button is created
-document.addEventListener("click", () => {
-  if (
-    document.querySelector(".totalOrderContainer") &&
-    !orderMessage.querySelector("h3").onclick
-  ) {
-    handleOrderConfirmation();
-  }
+// Initial event listener setup to ensure cart and modal setup works reliably
+document.addEventListener("DOMContentLoaded", () => {
+  handleOrderConfirmation();
 });

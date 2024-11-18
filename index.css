@@ -24,8 +24,9 @@ body{
     min-height: 100vh;
     position: relative;
     overflow-x: hidden;
-}
 
+}
+    
 
   #container {
     display: grid;
@@ -47,6 +48,9 @@ body{
     border-radius: 5px;
     text-align: center;
     /* width: 200px */
+    /* position: sticky;
+    bottom: 20px;
+    z-index: 1; */
   }
 
     .cart {
@@ -229,7 +233,17 @@ img{
     font-size: 28px;
     font-weight: bold;
 }
-
+.delete-btn{
+    color: #aaa;
+    font-size: 10px;
+    font-weight: bold;
+    border: none;
+}
+.delete-btn:hover,
+.delete-btn:focus{
+    color: black;
+    cursor: pointer; 
+}
 .close:hover,
 .close:focus {
     color: black;
@@ -244,27 +258,52 @@ img{
     padding: 15px;
     font-weight: bold;
 }
+.containerb{
+    height: 50px;
+    border: 5px solid black;
+    background-color: hsl(14, 84%, 39%);
+    border-radius: 10px;
+    text-align: center;
+    position: sticky;
+    top: 0;
+    z-index: 2;
+    overflow: hidden;
+}
+.anim{
+    color: white;
+     font-weight: bold;
+    text-transform: capitalize;
+    font-size: large; 
+    position: absolute; 
+    left: -400px; 
+   right: 400px; 
+      animation-name: mint;
+    animation-duration: 5s;
+    animation-iteration-count: infinite;
+    animation-direction: reverse;
+    animation-timing-function: linear;
+    z-index: 1;
+}
 
-/* @media screen and (min-width: 768px) {
-    .maindiv {
-      flex-direction: row;
-      gap: 20px;
+  @keyframes mint{
+    0%{
+        transform: translateX(0%); 
     }
-  
-    #container {
-      flex: 2;
+    100%{
+        transform: translateX(150%);
+        right: 400px;
     }
-  
-    #orderMessage {
-      flex: 1;
-      align-self: flex-start;
-    }
-  } */
+  }
   
   @media screen and (max-width: 767px) {
     .imageBox {
       height: 150px;
+      width: 100;
      
+    }
+    #container{
+        padding: 10px;
+        margin-left: 0;
     }
   
     .dessert {
@@ -274,20 +313,30 @@ img{
   
     .cartBox {
       width: auto;
-      padding: 5px;
+      /* padding: 5px; */
+      width: 100%;
     }
     .cart{
         /* width: 80%; */
         align-items: center;
+        width: 100%;
+        height: 250px;
+        gap: 10px;
+        
     }
-  
+    .nameList{
+        margin-top: 10px;
+        gap: 20px;
+        /* border: 1px solid red; */
+        
+    }
     .addList {
       font-size: 10px;
     }
     .maindiv{
         display: flex;
         flex-wrap: wrap;
-        padding: 10px;
+        /* padding: 10px; */
         
     }
   }
